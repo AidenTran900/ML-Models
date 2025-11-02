@@ -21,12 +21,19 @@ int main()
                  {3, 4}};
     Matrix m2 = {{5, 6}, 
                  {7, 8}};
+    Matrix m3 = {{-1, 4, -2}, 
+                 {-4, 6, 1},
+                 {-6, -6, -2}};
 
     fmt::print("Add:\n");
     printMatrix(addMatrix(m1, m2));
 
     fmt::print("Multiply:\n");
     printMatrix(multiplyMatrix(m1, m2));
+
+    fmt::print("Eliminate m3:\n");
+    printMatrix(gaussianElimination(m3));
+
 
     return 0;
 }
