@@ -1,86 +1,177 @@
-# C++/CMake modern boilerplate
+# LinearModel
 
-[![CMake](https://github.com/Lectem/cpp-boilerplate/actions/workflows/cmake.yml/badge.svg)](https://github.com/Lectem/cpp-boilerplate/actions/workflows/cmake.yml)
-[![Appveyor build status](https://ci.appveyor.com/api/projects/status/63mnrl1am9plfc4f/branch/master?svg=true)](https://ci.appveyor.com/project/Lectem/boilerplate/branch/master)
-[![Coverage](https://codecov.io/gh/Lectem/cpp-boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/Lectem/cpp-boilerplate)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/dfaaaa975fd349b4a565500d97c8d5e1)](https://app.codacy.com/gh/Lectem/cpp-boilerplate/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![CodeQL](https://github.com/Lectem/cpp-boilerplate/actions/workflows/codeql.yml/badge.svg)](https://github.com/Lectem/cpp-boilerplate/actions/workflows/codeql.yml)
-[![CDash dashboard](https://img.shields.io/badge/CDash-Access-blue.svg)](http://my.cdash.org/index.php?project=cpp-boilerplate)
+A C++ implementation of linear regression using gradient descent optimization. This project demonstrates fundamental machine learning concepts including cost function computation and parameter optimization through gradient descent.
 
-[![Pull requests](https://img.shields.io/github/issues-pr-raw/Lectem/cpp-boilerplate.svg)](https://github.com/Lectem/cpp-boilerplate/pulls)
-[![Opened issues](https://img.shields.io/github/issues-raw/Lectem/cpp-boilerplate.svg)](https://github.com/Lectem/cpp-boilerplate/issues)
-[![Documentation](https://img.shields.io/badge/Documentation-latest-blue.svg)](https://lectem.github.io/cpp-boilerplate)
+## Features
 
-This is a template for new projects, gives a good CMake base and a few dependencies you most likely want in your project. It also set ups some basic CI builds.
+- **Matrix Operations**: Efficient matrix addition and multiplication for linear algebra computations
+- **Linear Regression**: Implementation of univariate and multivariate linear regression
+- **Cost Function**: Mean Squared Error (MSE) calculation for model evaluation
+- **Gradient Descent**: Iterative optimization algorithm to minimize the cost function
+- **CMake Build System**: Cross-platform build configuration
 
-It uses "modern" CMake, ie 3.x paradigms, and should be a good starting point for both people willing to learn it and those that want to update/upgrade their CMakeLists.txt!
+## Mathematical Background
 
-Everything will not necessarily be useful for new projects, but serves as a learning document where most of the CMake features you will need should be showcased.
+### Linear Regression Model
 
-If you disagree with some pieces of advice given here, please discuss it with me by opening a Github Issue! Enhancements are always welcome.  
+The hypothesis function for linear regression is:
 
-## Usage
+```
+h(x) = θ₀ + θ₁x₁ + θ₂x₂ + ... + θₙxₙ
+```
 
-If you want to bootstrap a new project you only need to :
+Or in vectorized form: `h(x) = θᵀX`
 
--   If you don't already have your git repository setup
-    -   Simply copy/paste the folder (without the .git folder) and run the createBoilerPlate.sh file. This will create an initial git commit and add the _required_ submodules.
--   Hack CMakeLists.txt and CTestConfig.cmake to change the project name, remove unnecessary parts/comments.
--   Ready to go !
+### Cost Function (Mean Squared Error)
 
-The CI providers used and that might need some setup :
--   Github actions (no setup required)
--   AppVeyor, for MSVC on Windows
--   Codecov.io, for the codecoverage reports
--   CDash, for test and coverage reports using CTest. Can also be used to build nightlies.
+```
+J(θ) = (1/2m) Σ(h(xⁱ) - yⁱ)²
+```
 
-## Requirements :
+Where:
+- `m` is the number of training examples
+- `h(xⁱ)` is the predicted value
+- `yⁱ` is the actual value
 
--   CMake 3.16 (Not needed for all scripts)
--   Git (for the submodules)
--   Any of the CI providers listed above if needed.
+### Gradient Descent
 
-## Some features/notes :
+The parameter update rule:
 
--   Scripts lying in the cmake/ folder can be copy/pasted for use in any CMake project
--   Uses c++14
--   CopyDllsForDebug.cmake script : A small wrapper around fixup_bundle to copy DLLs to the output directory on windows
--   LTO.cmake script : Easier link time optimization configuration (should work on all CMake 3.x versions) as it used to be painful to setup.
--   Warnings.cmake script : A wrapper around common warning settings
--   Basic unit-testing using [doctest](https://github.com/onqtam/doctest)
--   Coverage.cmake : Test coverage script to add a 'Coverage' build type to CMake
--   CodeQL already knows about cmake and can build most of the projects without any special configuration. A sample configuration is in this project, mostly due to using submodules.
+```
+θⱼ := θⱼ - α(∂/∂θⱼ)J(θ)
+```
 
-## FAQ
+Where:
+- `α` is the learning rate
+- The partial derivative represents the gradient
 
-**Q**: I'm new to this CMake stuff, where do I start ?
+## Prerequisites
 
-**A**: I would suggest reading my [blog posts](https://siliceum.com/en/blog/post/cmake_01_cmake-basics), [CGold](https://cgold.readthedocs.io) or [An introduction to Modern CMake](https://cliutils.gitlab.io/modern-cmake/README.html) or simply the latest and official [tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)!
+- C++14 or higher
+- CMake 3.16 or higher
+- A C++ compiler (GCC, Clang, MSVC)
 
-___
+## Building the Project
 
-**Q**: Why can't I link some new libraries I put inside the external folder ?
+### Unix/Linux/macOS
 
-**A**: By default targets are not at the GLOBAL scope, which means your CMakelists.txt might not see it.
-In this case you can either add an alias/imported library or use find_package/library as you would if the library was not in your buildtree.
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd LinearModel
 
-___
+# Create build directory
+mkdir build && cd build
 
-**Q**: Should I always put my dependencies in the folder external
+# Configure and build
+cmake ..
+cmake --build .
 
-**A**: Absolutely not ! It is a great place for small libraries, but you probably don't want to have to rebuild big libs every time.
-For those, you can use a package manager such as [VCPKG](https://github.com/microsoft/vcpkg/), [CPM](https://github.com/cpm-cmake/CPM.cmake) or simply rely on `find_package`.
+# Run the executable
+./Build
+```
 
-___
+### Windows
 
-**Q**: I don't understand why you made the choice of XXXXXX here ?
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd LinearModel
 
-**A**: Open a new issue !
+# Create build directory
+mkdir build
+cd build
 
-## External dependencies (using submodules)
+# Configure and build
+cmake ..
+cmake --build . --config Release
 
-Those dependencies can be easily removed by changing the external/CMakelists.txt and cleaning main.cpp.
+# Run the executable
+.\Release\Build.exe
+```
 
--   [libfmt](https://github.com/fmtlib/fmt) In my opinion the best formating library
--   [spdlog](https://github.com/gabime/spdlog) A logging library based on libfmt
--   [doctest](https://github.com/onqtam/doctest) A test library not as heavy as the others
+## Project Structure
+
+```
+LinearModel/
+├── source/
+│   ├── main.cpp              # Entry point and demonstration
+│   └── Helpers/
+│       └── matrix.cpp        # Matrix operations implementation
+├── external/                 # Third-party dependencies
+│   ├── fmt/                  # Formatting library
+│   └── spdlog/              # Logging library
+├── CMakeLists.txt           # CMake configuration
+└── README.md
+```
+
+## Usage Example
+
+```cpp
+#include "Helpers/matrix.cpp"
+
+int main() {
+    // Define matrices
+    Matrix X = {{1, 2},
+                {3, 4}};
+    Matrix Y = {{5, 6},
+                {7, 8}};
+
+    // Matrix addition
+    Matrix sum = addMatrix(X, Y);
+    printMatrix(sum);
+
+    // Matrix multiplication
+    Matrix product = multiplyMatrix(X, Y);
+    printMatrix(product);
+
+    return 0;
+}
+```
+
+## Roadmap
+
+- [x] Basic matrix operations (addition, multiplication)
+- [ ] Implement linear regression hypothesis function
+- [ ] Implement cost function (MSE)
+- [ ] Implement gradient descent algorithm
+- [ ] Add data normalization/feature scaling
+- [ ] Support for CSV data loading
+- [ ] Visualization of cost function convergence
+- [ ] Model serialization and loading
+- [ ] Multiple optimization algorithms (Batch, Stochastic, Mini-batch)
+
+## Theory
+
+### Why Gradient Descent?
+
+Gradient descent is an optimization algorithm used to minimize the cost function by iteratively moving in the direction of steepest descent. It's particularly useful for linear regression because:
+
+1. It can handle large datasets efficiently
+2. It scales well to multiple features
+3. It provides a foundation for understanding more complex optimization algorithms
+
+### Learning Rate (α)
+
+The learning rate determines the step size at each iteration. Choosing the right learning rate is crucial:
+- Too small: Slow convergence
+- Too large: May overshoot the minimum or diverge
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is available for educational purposes.
+
+## References
+
+- Andrew Ng's Machine Learning Course
+- "Pattern Recognition and Machine Learning" by Christopher Bishop
+- "The Elements of Statistical Learning" by Hastie, Tibshirani, and Friedman
+
+## Acknowledgments
+
+- Built using [fmt](https://github.com/fmtlib/fmt) for modern C++ formatting
+- CMake boilerplate structure for cross-platform compatibility
