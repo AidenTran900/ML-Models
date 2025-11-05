@@ -24,7 +24,7 @@ A C++ machine learning library built from the ground up. Implementing various ML
 ```bash
 # Clone the repository
 git clone https://github.com/ProdigiousPersonn/ML-Models
-cd LinearModel
+cd ML-Models
 
 # Create and enter build directory
 mkdir build && cd build
@@ -44,7 +44,7 @@ cmake --build .
 ```bash
 # Clone the repository
 git clone https://github.com/ProdigiousPersonn/ML-Models
-cd LinearModel
+cd ML-Models
 
 # Create and enter build directory
 mkdir build
