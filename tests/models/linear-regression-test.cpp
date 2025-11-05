@@ -2,10 +2,11 @@
 #include "ml_lib/models/linear-regression.h"
 #include "ml_lib/core/loss.h"
 #include "ml_lib/core/optimizer.h"
+#include "ml_lib/core/regularizer.h"
 
 int linearRegTest()
 {
-    LinearRegression model(2, createLoss(LossType::MSE), createOptimizer(OptimizerType::BATCH, 0.01));
+    LinearRegression model(2, new MSELoss(), new BatchOptimizer(0.01), new L2Regularizer(0.01));
 
     Matrix X = std::vector<std::vector<double>>{
         {1.0, 2.0},

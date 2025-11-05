@@ -1,7 +1,7 @@
 #include "ml_lib/models/linear-regression.h"
 
-LinearRegression::LinearRegression(int input_dim, LossFunction* loss, Optimizer* opt)
-    : BaseModel(loss, opt), weights(input_dim, 1, 0.01), bias(1, 1, 0.0),
+LinearRegression::LinearRegression(int input_dim, LossFunction* loss, Optimizer* opt, Regularizer* reg)
+    : BaseModel(loss, opt, reg), weights(input_dim, 1, 0.01), bias(1, 1, 0.0),
       grad_w(input_dim, 1, 0.0), grad_b(1, 1, 0.0) {}
 
 // y^​=XW+b
@@ -25,9 +25,12 @@ void LinearRegression::backward(const Matrix& y_true)
 
     Matrix predictions = last_output;
     Matrix error = loss_func->gradient(predictions, y_true);
+    Matrix reg_vals = regularizer->gradient(weights);
 
-    grad_w = last_input.transpose().multiply(error);
+    // Weights
+    grad_w = last_input.transpose().multiply(error).add(reg_vals);
 
+    // Bias
     double grad_b_sum = 0.0;
     for (int j = 0; j < error.rows(); j++) {
         grad_b_sum += error(j, 0);

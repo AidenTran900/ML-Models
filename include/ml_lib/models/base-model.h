@@ -2,11 +2,13 @@
 #include "../math/matrix.h"
 #include "../core/loss.h"
 #include "../core/optimizer.h"
+#include "../core/regularizer.h"
 
 class BaseModel {
     protected:
         LossFunction* loss_func;
         Optimizer* optimizer;
+        Regularizer* regularizer;
 
         int batch_size;
         int epochs;
@@ -15,8 +17,8 @@ class BaseModel {
         Matrix last_output;
 
     public:
-        BaseModel(LossFunction* loss, Optimizer* opt)
-            : loss_func(loss), optimizer(opt), batch_size(32), epochs(100) {}
+        BaseModel(LossFunction* loss, Optimizer* opt, Regularizer* reg)
+            : loss_func(loss), optimizer(opt), regularizer(reg), batch_size(32), epochs(100) {}
 
         virtual Matrix forward(const Matrix& X) = 0;
         virtual void backward(const Matrix& y_true) = 0;
@@ -43,5 +45,6 @@ class BaseModel {
         virtual ~BaseModel() {
             delete loss_func;
             delete optimizer;
+            delete regularizer;
         }
 };

@@ -150,4 +150,5 @@ CMakeFiles/Build.dir/source/models/linear-regression.cpp.o: \
  /usr/include/c++/15/bits/sstream.tcc \
  /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/base-model.h \
  /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/../core/loss.h \
- /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/../core/optimizer.h
+ /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/../core/optimizer.h \
+ /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/../core/regularizer.h

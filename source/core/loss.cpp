@@ -27,7 +27,6 @@ double MAELoss::compute(const Matrix& y_pred, const Matrix& y_true) const
     if (n == 0) {
         return 0.0;
     }
-
     for (int i = 0; i < y_pred.rows(); i++) {
         for (int j = 0; j < y_pred.cols(); j++) {
             result += abs(y_pred(i, j) - y_true(i, j));
@@ -130,21 +129,3 @@ Matrix RMSELoss::gradient(const Matrix& y_pred, const Matrix& y_true) const
 }
 
 
-
-LossFunction* createLoss(LossType type)
-{
-    switch (type) {
-        case LossType::L1:
-            return new L1Loss();
-        case LossType::MAE:
-            return new MAELoss();
-        case LossType::L2:
-            return new L2Loss();
-        case LossType::MSE:
-            return new MSELoss();
-        case LossType::RMSE:
-            return new RMSELoss();
-        default:
-            return nullptr;
-    }
-}

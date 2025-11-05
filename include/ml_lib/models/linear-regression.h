@@ -16,7 +16,7 @@ class LinearRegression : public BaseModel {
         Matrix grad_b;
 
     public:
-        LinearRegression(int input_dim, LossFunction* loss, Optimizer* opt);
+        LinearRegression(int input_dim, LossFunction* loss, Optimizer* opt, Regularizer* reg);
 
         Matrix forward(const Matrix& X) override;
         void backward(const Matrix& y_true) override;

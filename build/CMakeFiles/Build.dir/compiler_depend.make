@@ -1018,6 +1018,7 @@ CMakeFiles/Build.dir/source/math/matrix.cpp.o: /home/atran/Documents/Projects/Li
 CMakeFiles/Build.dir/source/models/linear-regression.cpp.o: /home/atran/Documents/Projects/LinearModel/source/models/linear-regression.cpp \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/core/loss.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/core/optimizer.h \
+  /home/atran/Documents/Projects/LinearModel/include/ml_lib/core/regularizer.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/math/matrix.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/base-model.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/linear-regression.h \
@@ -1512,6 +1513,7 @@ CMakeFiles/Build.dir/tests/models/linear-regression-test.cpp.o: /home/atran/Docu
   /home/atran/Documents/Projects/LinearModel/external/fmt/include/fmt/format.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/core/loss.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/core/optimizer.h \
+  /home/atran/Documents/Projects/LinearModel/include/ml_lib/core/regularizer.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/math/matrix.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/base-model.h \
   /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/linear-regression.h \
@@ -1780,6 +1782,8 @@ CMakeFiles/Build.dir/tests/models/linear-regression-test.cpp.o: /home/atran/Docu
 
 
 /home/atran/Documents/Projects/LinearModel/include/ml_lib/models/linear-regression.h:
+
+/home/atran/Documents/Projects/LinearModel/include/ml_lib/core/regularizer.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/syslimits.h:
 
