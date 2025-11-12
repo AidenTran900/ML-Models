@@ -25,16 +25,12 @@ void LogisticRegression::backward(const Matrix& y_true) {
     int m = last_input.rows();
     if (m == 0) return;
 
-    // Compute gradient from loss function
     Matrix predictions = last_output;
     Matrix error = loss_func->gradient(predictions, y_true);
     Matrix reg_vals = regularizer->gradient(weights);
 
-    // Compute gradients for weights and bias
-    // grad_w = X^T * error + regularization
     grad_w = last_input.transpose().multiply(error).add(reg_vals);
 
-    // grad_b = sum of error
     double grad_b_sum = 0.0;
     for (int j = 0; j < error.rows(); j++) {
         grad_b_sum += error(j, 0);
@@ -43,7 +39,19 @@ void LogisticRegression::backward(const Matrix& y_true) {
 }
 
 void LogisticRegression::update() {
-    // Update weights and bias using optimizer
     optimizer->step(weights, grad_w);
     optimizer->step(bias, grad_b);
+}
+
+Matrix LogisticRegression::predict(const Matrix& y) {
+    int y_rows = y.rows();
+    int y_cols = y.cols();
+
+    Matrix predictions = Matrix(y_rows, y_cols, 0);
+    for (int i = 0; i < y_rows; i++) {
+        for (int j = 0; j < y_cols; j++) {
+            predictions(i, j) = (y(i, j) > this->threshold) ? 1 : 0;
+        }
+    }
+    return predictions;
 }

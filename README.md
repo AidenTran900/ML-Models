@@ -4,12 +4,17 @@ A C++ machine learning library built from the ground up. Implementing various ML
 
 ## Features
 
-- Linear regression with gradient descent optimization
+- **Linear regression** with gradient descent optimization
+- **Logistic regression** for binary classification
 - Matrix operations library (addition, multiplication, transpose, inverse)
-- Loss functions: MSE, MAE, RMSE, L1, L2
-- Evaluation metrics: R2, Adjusted R2, MSE, MAE, RMSE
+- Loss functions: MSE, MAE, RMSE, L1, L2, Binary Cross-Entropy (BCE)
+- Evaluation metrics:
+  - Regression: R2, Adjusted R2, MSE, MAE, RMSE
+  - Classification: Accuracy, Precision, Recall, F1 Score
 - Regularization: L1 (Lasso) & L2 (Ridge)
-- Housing price prediction example with real-world dataset
+- Real-world examples:
+  - Housing price prediction (Linear Regression)
+  - Heart disease prediction (Logistic Regression)
 
 ## Prerequisites
 
@@ -68,12 +73,14 @@ LinearModel/
 │   ├── main.cpp           # Entry point
 │   ├── math/              # Matrix operations
 │   ├── core/              # Loss, optimizer, regularizer, metrics
-│   └── models/            # ML model implementations
+│   └── models/            # ML model implementations (Linear & Logistic Regression)
 ├── include/
 │   └── ml_lib/            # Public headers
 ├── examples/
-│   └── linear-regression/
-│       └── housing/       # Housing price prediction example
+│   ├── linear-regression/
+│   │   └── housing/       # Housing price prediction example
+│   └── logistic-regression/
+│       └── h-disease-example.cpp  # Heart disease prediction example
 ├── tests/                 # Unit tests
 ├── external/              # Dependencies (fmt, spdlog, doctest)
 └── CMakeLists.txt        # Build configuration
@@ -81,7 +88,7 @@ LinearModel/
 
 ## Examples
 
-### Housing Price Prediction
+### Housing Price Prediction (Linear Regression)
 
 A complete example demonstrating linear regression on a real-world housing dataset (https://www.kaggle.com/datasets/yasserh/housing-prices-dataset):
 
@@ -91,7 +98,19 @@ A complete example demonstrating linear regression on a real-world housing datas
 - Optimizer: Batch gradient descent
 - Metrics: MSE, RMSE, MAE, R²
 
-Run the example:
+### Heart Disease Prediction (Logistic Regression)
+
+A binary classification example using logistic regression on the Framingham Heart Study dataset:
+
+- Dataset: Framingham Heart Study - 10 Year CHD Risk
+- Features: 15 clinical features (age, sex, cholesterol, blood pressure, BMI, etc.)
+- Preprocessing: Z-scoreBCE normalization
+- Model: Logistic regression with L2 regularization
+- Loss: Binary Cross-Entropy (BCE)
+- Optimizer: Batch gradient descent
+- Metrics: Accuracy, Precision, Recall, F1 Score
+
+Run the examples:
 ```bash
 ./Build
 ```
@@ -103,11 +122,11 @@ Run the example:
 - [x] **Evaluation Metrics (Regression):** MSE, MAE, RMSE, R-squared
 - [X] **Regularization:** L1 (Lasso) & L2 (Ridge)
 
-### Classification [ ]
-- [ ] **Logistic Regression**
-- [ ] **Evaluation Metrics (Classification):**
-    - [ ] Confusion Matrix
-    - [ ] Accuracy, Precision, Recall, F1-Score
+### Classification [X]
+- [x] **Logistic Regression**
+- [x] **Evaluation Metrics (Classification):**
+    - [x] Accuracy, Precision, Recall, FPR, F1-Score
+    - [X] Confusion Matrix
     - [ ] ROC Curve and AUC
 - [ ] **K-Nearest Neighbors (KNN)**
 - [ ] **Support Vector Machines (SVMs)**

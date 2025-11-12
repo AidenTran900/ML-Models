@@ -207,52 +207,7 @@ int runHeartDiseaseExample() {
     }
 
     Matrix y_train_pred = model.forward(X_train);
-    int train_correct = 0;
-    int train_tp = 0, train_fp = 0, train_fn = 0;
-    for (int i = 0; i < y_train_pred.rows(); i++) {
-        int predicted = y_train_pred(i, 0) > 0.5 ? 1 : 0;
-        int actual = static_cast<int>(y_train(i, 0));
-        if (predicted == actual) train_correct++;
-        if (predicted == 1 && actual == 1) train_tp++;
-        if (predicted == 1 && actual == 0) train_fp++;
-        if (predicted == 0 && actual == 1) train_fn++;
-    }
-    double train_accuracy = static_cast<double>(train_correct) / y_train_pred.rows();
-    double train_precision = (train_tp + train_fp > 0) ? static_cast<double>(train_tp) / (train_tp + train_fp) : 0.0;
-    double train_recall = (train_tp + train_fn > 0) ? static_cast<double>(train_tp) / (train_tp + train_fn) : 0.0;
-    double train_f1 = (train_precision + train_recall > 0) ? 2 * (train_precision * train_recall) / (train_precision + train_recall) : 0.0;
-
-    fmt::print("\n{:-<70}\n", "");
-    fmt::print("Training Set Metrics:\n");
-    fmt::print("{:-<70}\n", "");
-    fmt::print("Accuracy:  {:.4f}\n", train_accuracy);
-    fmt::print("Precision: {:.4f}\n", train_precision);
-    fmt::print("Recall:    {:.4f}\n", train_recall);
-    fmt::print("F1 Score:  {:.4f}\n", train_f1);
-
     Matrix y_test_pred = model.forward(X_test);
-    int test_correct = 0;
-    int test_tp = 0, test_fp = 0, test_fn = 0;
-    for (int i = 0; i < y_test_pred.rows(); i++) {
-        int predicted = y_test_pred(i, 0) > 0.5 ? 1 : 0;
-        int actual = static_cast<int>(y_test(i, 0));
-        if (predicted == actual) test_correct++;
-        if (predicted == 1 && actual == 1) test_tp++;
-        if (predicted == 1 && actual == 0) test_fp++;
-        if (predicted == 0 && actual == 1) test_fn++;
-    }
-    double test_accuracy = static_cast<double>(test_correct) / y_test_pred.rows();
-    double test_precision = (test_tp + test_fp > 0) ? static_cast<double>(test_tp) / (test_tp + test_fp) : 0.0;
-    double test_recall = (test_tp + test_fn > 0) ? static_cast<double>(test_tp) / (test_tp + test_fn) : 0.0;
-    double test_f1 = (test_precision + test_recall > 0) ? 2 * (test_precision * test_recall) / (test_precision + test_recall) : 0.0;
-
-    fmt::print("\n{:-<70}\n", "");
-    fmt::print("Test Set Metrics:\n");
-    fmt::print("{:-<70}\n", "");
-    fmt::print("Accuracy:  {:.4f}\n", test_accuracy);
-    fmt::print("Precision: {:.4f}\n", test_precision);
-    fmt::print("Recall:    {:.4f}\n", test_recall);
-    fmt::print("F1 Score:  {:.4f}\n", test_f1);
 
     fmt::print("\n{:-<70}\n", "");
     fmt::print("Sample Predictions (Test Set - First 10):\n");

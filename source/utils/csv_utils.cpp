@@ -113,10 +113,25 @@ bool CSVUtils::readFeatureTarget(
         for (csv::CSVRow& row : reader) {
             std::vector<double> feature_row;
             double target_value = 0.0;
+            bool has_missing = false;
 
             size_t col_idx = 0;
             for (csv::CSVField& field : row) {
-                double value = field.get<double>();
+                std::string field_str = field.get<std::string>();
+
+                // Check for missing values (NA, empty, etc.)
+                if (field_str.empty() || field_str == "NA" || field_str == "N/A") {
+                    has_missing = true;
+                    break;
+                }
+
+                double value;
+                try {
+                    value = field.get<double>();
+                } catch (...) {
+                    has_missing = true;
+                    break;
+                }
 
                 if (col_idx == target_column) {
                     target_value = value;
@@ -126,7 +141,8 @@ bool CSVUtils::readFeatureTarget(
                 col_idx++;
             }
 
-            if (!feature_row.empty()) {
+            // Only add row if it has no missing values
+            if (!has_missing && !feature_row.empty()) {
                 features.push_back(std::move(feature_row));
                 target.push_back(target_value);
             }
