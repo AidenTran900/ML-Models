@@ -118,6 +118,33 @@ Matrix ConfusionMatrix::compute(const Matrix &y_true, const Matrix &y_pred) cons
     return confusion;
 }
 
+ROCResult ROCCurve::compute(const Matrix &y_true, const Matrix &y_pred, const double resolution) const {
+    ROCResult result;
+
+    ConfusionMatrix confusionMatrix;
+    RecallMetric recallMetric;
+    FPRMetric fprMetric;
+
+    for (double threshold = 0.0; threshold <= 1.0; threshold += resolution) {
+        Matrix y_pred_thresholded = Matrix(y_pred.rows(), y_pred.cols(), 0.0);
+        for (int i = 0; i < y_pred.rows(); i++) {
+            for (int j = 0; j < y_pred.cols(); j++) {
+                y_pred_thresholded(i, j) = (y_pred(i, j) >= threshold) ? 1.0 : 0.0;
+            }
+        }
+
+        Matrix confusion = confusionMatrix.compute(y_true, y_pred_thresholded);
+
+        double tpr = recallMetric.compute(confusion);
+        double fpr = fprMetric.compute(confusion);
+
+        result.TPR.push_back(tpr);
+        result.FPR.push_back(fpr);
+    }
+
+    return result;
+}
+
 double AccuracyMetric::compute(const Matrix& confusion) const
 {
     int TP = confusion(0, 0);

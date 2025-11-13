@@ -59,6 +59,16 @@ class ClassificationMetric {
         virtual ~ClassificationMetric() {}
 };
 
+struct ROCResult {
+    std::vector<double> TPR;
+    std::vector<double> FPR;
+};
+
+class ROCCurve {
+    public:
+        ROCResult compute(const Matrix& y_true, const Matrix& y_pred, const double resolution = 0.01) const;
+};
+
 class AccuracyMetric : public ClassificationMetric {
     public:
         virtual double compute(const Matrix& confusion) const override;
