@@ -31,13 +31,29 @@ double& Matrix::operator()(int i, int j) { // Setter
     return m_data[i * m_cols + j];
 }
 
-double Matrix::operator()(int i, int j) const { // Getter
+double Matrix::operator()(int i, int j) const {
     return m_data[i * m_cols + j];
 }
 
+const double* Matrix::getRow(int row) const {
+    return &m_data[row * m_cols];
+}
+
+double* Matrix::getRow(int row) {
+    return &m_data[row * m_cols];
+}
+
+std::vector<double> Matrix::getRowVector(int row) const {
+    const double* row_ptr = getRow(row);
+    return std::vector<double>(row_ptr, row_ptr + m_cols);
+}
+
 void Matrix::swapRows(int row1, int row2) {
+    if (row1 == row2) return;
+    double* r1 = getRow(row1);
+    double* r2 = getRow(row2);
     for (int j = 0; j < m_cols; j++) {
-        std::swap((*this)(row1, j), (*this)(row2, j));
+        std::swap(r1[j], r2[j]);
     }
 }
 
@@ -52,35 +68,27 @@ void Matrix::print() const {
 }
 
 Matrix Matrix::add(const Matrix& other) const {
-    // Check dimensions
     if (m_cols != other.m_cols || m_rows != other.m_rows) {
         throw std::invalid_argument("Matrix dimensions are incompatible.");
     }
 
     Matrix result(m_rows, m_cols);
-
-    // Do add stuff
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
-            result(i, j) = (*this)(i, j) + other(i, j);
-        }
+    int size = m_rows * m_cols;
+    for (int i = 0; i < size; i++) {
+        result.m_data[i] = m_data[i] + other.m_data[i];
     }
     return result;
 }
 
 Matrix Matrix::sub(const Matrix& other) const {
-    // Check dimensions
     if (m_cols != other.m_cols || m_rows != other.m_rows) {
         throw std::invalid_argument("Matrix dimensions are incompatible.");
     }
 
     Matrix result(m_rows, m_cols);
-
-    // Do sub stuff
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
-            result(i, j) = (*this)(i, j) - other(i, j);
-        }
+    int size = m_rows * m_cols;
+    for (int i = 0; i < size; i++) {
+        result.m_data[i] = m_data[i] - other.m_data[i];
     }
     return result;
 }
@@ -108,11 +116,9 @@ Matrix Matrix::multiply(const Matrix& other) const {
 
 Matrix Matrix::scale(double scalar) const {
     Matrix result(m_rows, m_cols);
-
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
-            result(i, j) = (*this)(i, j) * scalar;
-        }
+    int size = m_rows * m_cols;
+    for (int i = 0; i < size; i++) {
+        result.m_data[i] = m_data[i] * scalar;
     }
     return result;
 }
@@ -162,22 +168,25 @@ EliminationResult Matrix::forwardElimination(const Matrix& m, const Matrix& aug)
 
         double pivot = m_c(pivot_row, j);
 
-        // Do subtraction
         for (int i = pivot_row + 1; i < m_c.m_rows; i++) {
-            double target = m_c(i, j); // Element we want to be 0
-            double c = target / pivot; // Provides coefficient for subtraction
+            double target = m_c(i, j);
+            double c = target / pivot;
 
+            double* current_row = m_c.getRow(i);
+            const double* pivot_row_data = m_c.getRow(pivot_row);
             for (int z = j; z < m_c.m_cols; z++) {
-                m_c(i, z) -= m_c(pivot_row, z) * c;
+                current_row[z] -= pivot_row_data[z] * c;
             }
 
             if (is_augmented) {
+                double* aug_current = aug_c.getRow(i);
+                const double* aug_pivot = aug_c.getRow(pivot_row);
                 for (int z = 0; z < aug_c.m_cols; z++) {
-                    aug_c(i, z) -= aug_c(pivot_row, z) * c;
+                    aug_current[z] -= aug_pivot[z] * c;
                 }
             }
 
-            m_c(i, j) = 0.0;
+            current_row[j] = 0.0;
         }
 
         pivot_row++;
@@ -214,33 +223,36 @@ EliminationResult Matrix::backwardElimination(const Matrix& m, const Matrix& aug
             continue;
         }
 
-        // Normalize pivot row
         double pivot_val = m_c(i, pivot_col);
 
+        double* pivot_row_data = m_c.getRow(i);
         for (int j = pivot_col; j < m_c.m_cols; j++) {
-            m_c(i, j) /= pivot_val;
+            pivot_row_data[j] /= pivot_val;
         }
         if (is_augmented) {
+            double* aug_pivot_row = aug_c.getRow(i);
             for (int j = 0; j < aug_c.m_cols; j++) {
-                aug_c(i, j) /= pivot_val;
+                aug_pivot_row[j] /= pivot_val;
             }
         }
-        m_c(i, pivot_col) = 1.0;
+        pivot_row_data[pivot_col] = 1.0;
 
-        // Eliminate all elements above pivot
         for (int k = i - 1; k >= 0; k--) {
             double target_val = m_c(k, pivot_col);
 
+            double* target_row = m_c.getRow(k);
             for (int j = pivot_col; j < m_c.m_cols; j++) {
-                m_c(k, j) -= target_val * m_c(i, j);
+                target_row[j] -= target_val * pivot_row_data[j];
             }
 
             if (is_augmented) {
+                double* aug_target = aug_c.getRow(k);
+                const double* aug_pivot = aug_c.getRow(i);
                 for (int j = 0; j < aug_c.m_cols; j++) {
-                    aug_c(k, j) -= target_val * aug_c(i, j);
+                    aug_target[j] -= target_val * aug_pivot[j];
                 }
             }
-            m_c(k, pivot_col) = 0.0;
+            target_row[pivot_col] = 0.0;
         }
     }
 
@@ -325,28 +337,19 @@ double Matrix::dot(const Matrix& m) const {
     }
 
     double result = 0.0;
-    for (int i = 0; i < rows(); i++) {
-        for (int j = 0; j < cols(); j++) {
-            result += (*this)(i,j) * m(i,j);
-        }
+    int size = m_rows * m_cols;
+    for (int i = 0; i < size; i++) {
+        result += m_data[i] * m.m_data[i];
     }
     return result;
 }
 
 Matrix Matrix::sign() const {
     Matrix result(m_rows, m_cols);
-    
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
-            double val = (*this)(i, j);
-            if (val > 0) {
-                result(i, j) = 1.0;
-            } else if (val < 0) {
-                result(i, j) = -1.0;
-            } else {
-                result(i, j) = 0.0;
-            }
-        }
+    int size = m_rows * m_cols;
+    for (int i = 0; i < size; i++) {
+        double val = m_data[i];
+        result.m_data[i] = (val > 0.0) ? 1.0 : ((val < 0.0) ? -1.0 : 0.0);
     }
     return result;
 }

@@ -23,6 +23,10 @@ class Matrix {
         int cols() const { return m_cols; }
         bool empty() const { return m_rows == 0 || m_cols == 0; }
 
+        const double* getRow(int row) const;
+        double* getRow(int row);
+        std::vector<double> getRowVector(int row) const;
+
         void swapRows(int row1, int row2);
         void print() const;
 
